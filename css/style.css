@@ -1,0 +1,489 @@
+@import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
+@font-face {
+    font-family: "Yeongdo";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2410-1@1.2/Yeongdo-Rg.woff2")
+        format("woff2");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Yeongdo";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2410-1@1.2/Yeongdo-Hv.woff2")
+        format("woff2");
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Yeongdo";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2410-1@1.2/Yeongdo-Bd.woff2")
+        format("woff2");
+    font-weight: 900;
+    font-style: normal;
+}
+
+/* 기본 세팅 */
+body,
+html {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+    background-color: #efede0;
+    font-family: "NanumSquare", sans-serif;
+}
+
+/* 배경 이미지 */
+#animatedImg {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 335px;
+    height: 506px;
+    opacity: 1;
+    transform: translate(-50%, -50%);
+    transition:
+        transform 1s ease,
+        opacity 1s ease;
+    z-index: 0;
+}
+
+/* 메인 컨텐츠 */
+main {
+    opacity: 0;
+    transform: translateY(50px);
+    transition:
+        opacity 1s ease-out,
+        transform 1s ease-out;
+    padding: 20px;
+}
+
+main.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+.flex_container {
+    width: calc(50% - 50px);
+}
+
+.title_box {
+    padding: 10px 20px;
+    border-bottom: 1px solid #d491b0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+h1 {
+    font-family: "Yeongdo", sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: #d491b0;
+}
+
+h2 {
+    font-family: "cormorant", sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+h3 {
+    font-family: "Yeongdo", sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.flex_container > img {
+    display: block;
+    width: 80%;
+    border-radius: 16px;
+    margin: 0 auto 20px;
+}
+
+.flex_container > .onSales {
+    margin-bottom: 80px;
+    font-family: "cormorant", sans-serif;
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+.personal_table {
+    margin-bottom: 100px;
+}
+
+.personal_table > tbody > tr > td.label {
+    width: 150px;
+    font-weight: 700;
+    height: 40px;
+}
+
+.personal_table > tbody > tr > td.label > span {
+    padding: 0 10px;
+    margin: 10px 0;
+    border-left: 3px solid #d491b0;
+}
+
+.personal_table > tbody > tr > td.blank {
+    width: 40px;
+}
+
+.album_tracklist {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.album_tracklist > .tracklist_box {
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.album_tracklist > .tracklist_box > .track_number {
+    font-family: "cormorant", sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    width: 20px;
+}
+
+.album_tracklist > .tracklist_box > .track_title {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.album_tracklist > .tracklist_box > .track_line {
+    flex-grow: 1;
+}
+
+hr {
+    border: 1px solid #d491b0;
+    margin: 0;
+}
+
+.album_tracklist > .tracklist_box > .track_button > button {
+    background: #d491b0;
+    border: none;
+    font-size: 1.2rem;
+    padding: 8px;
+    border-radius: 100%;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+}
+
+/* 기본 숨김 상태 */
+.modal,
+.backdrop {
+    display: none;
+    opacity: 0;
+}
+
+/* 백드롭 */
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 998;
+    opacity: 0;
+}
+
+/* 모달 */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(100vh);
+    background: transparent; /* 배경 투명 처리, 내부에서 스타일 지정 */
+    width: 100%;
+    max-width: 600px;
+    border-radius: 8px;
+    z-index: 999;
+    opacity: 0;
+}
+
+/* 모달 콘텐츠 (검정 배경, 흰 글씨) */
+.modal-content.custom-modal-content {
+    background-image: linear-gradient(to bottom left, floralwhite, #dcb0c1);
+    color: white;
+    padding: 30px 20px 50px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 90vw;
+    margin: 0 auto;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* 토글 버튼 */
+.media-toggle {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.toggle-btn {
+    padding: 6px 12px;
+    border: none;
+    min-width: 60px;
+    border-radius: 4px;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.toggle-btn.active {
+    background-color: #e870b0;
+}
+
+/* 유튜브 래퍼 */
+.youtube-wrapper {
+    margin-bottom: 12px;
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 비율 (9/16 = 0.5625) */
+    height: 0;
+    overflow: hidden;
+}
+
+.youtube-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* 공통 숨김 처리 클래스 */
+.hidden {
+    display: none;
+}
+
+/* 닫기 버튼 */
+.close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: black;
+}
+
+/* 모달 제목 */
+.modal-title {
+    margin-bottom: 16px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+#modal-cover {
+    content: "";
+    width: 70%;
+    padding-bottom: 70%;
+    margin: 50px auto;
+    border-radius: 16px;
+    object-fit: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.player-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
+
+/* 플레이어 컨트롤 */
+.player-controls {
+    width: 130px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.player-btn {
+    background-image: linear-gradient(to top left, #777777, #999999);
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 8px;
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+}
+
+.play-pause-btn {
+    font-size: 28px;
+}
+
+.player-progress {
+    flex-grow: 1;
+}
+
+#progressBar {
+    width: 100%;
+    height: 6px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #ddd;
+    border-radius: 3px;
+    outline: none;
+    margin: 8px 0;
+}
+
+/* 프로그래스 바 트랙 (WebKit 브라우저) */
+#progressBar::-webkit-slider-track {
+    height: 6px;
+    background: #ddd;
+    border-radius: 3px;
+}
+
+/* 프로그래스 바 썸 (WebKit 브라우저) */
+#progressBar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    margin-top: -6px;
+    background: #e870b0;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Firefox용 스타일 */
+#progressBar::-moz-range-track {
+    height: 6px;
+    background: #ddd;
+    border-radius: 3px;
+    border: none;
+}
+
+#progressBar::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #e870b0;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 진행된 부분의 색상을 위한 추가 스타일 */
+#progressBar::-webkit-slider-runnable-track {
+    height: 6px;
+    background: linear-gradient(to right, #e870b0 0%, #e870b0 var(--progress, 0%), #ddd var(--progress, 0%), #ddd 100%);
+    border-radius: 3px;
+}
+
+
+/* 시간 정보 */
+.time-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateX(-50%) translateY(100vh);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(-50%);
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateX(-50%) translateY(-50%);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-50%) translateY(100vh);
+        opacity: 0;
+    }
+}
+
+/* 등장 */
+.backdrop.show {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+.modal.show {
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+/* 사라짐 */
+.backdrop.fade-out {
+    animation: fadeOut 0.3s ease-in forwards;
+}
+
+.modal.slide-down {
+    animation: slideDown 0.3s ease-in forwards;
+}
+
+@media screen and (max-width: 1050px) {
+    .container {
+        flex-direction: column-reverse;
+        padding: 0;
+    }
+
+    .flex_container {
+        width: 100%;
+    }
+}
